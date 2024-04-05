@@ -1,47 +1,51 @@
+const fs = require('fs')
+const studentName = process.argv[2]
 
+if (studentName === 'print') {
+  fs.readFile('./students.txt', 'utf8', (err, data) => {
+    if (err) {
+      return console.log(err)
+    }
 
-// function printSomething(str) {
-//   console.log(str)
-// }
+    const names = data.split('\n')
 
-// printSomething('some string')
+    console.log('\nStudent List:', '\n', '----------')
 
-// const add = (num1, num2) => num1 + num2
+    for (let name of names) {
+      console.log(name)
+    }
+  })
+} else {
+  fs.appendFile('./students.txt', '\n' + studentName, (err) => {
+    if (err) {
+      return console.log(err)
+    }
 
-// const sum = add(5, 20)
-
-// console.log(sum)
-
-// function printStudents(...students) {
-//   console.log(students)
-// }
-
-// printStudents('Will', 'Mirsad', 'Muhsin', 'Trevor', 'Juan', 'Alice')
-
-// const fruits = ['orange', 'apple']
-
-// const copy = ['kiwi', ...fruits, 'banana']
-
-// const data = {
-//   name: 'JD',
-//   age: 44
-// }
-
-// const clone = { ...data }
-
-// console.log(clone)
-
-// const data = {
-//   name: 'JD',
-//   age: 44
-// }
-
-// const { name, age, blah } = data
-
-// console.log(data)
-
-function someFunc({ age }, str, num) {
-  console.log(num)
+    console.log('Student has been added!')
+  })
 }
 
-someFunc({ name: 'Bob', age: 99 }, 'another', 15)
+
+
+
+
+
+
+
+
+
+
+
+
+// writeFile will overwrite a file's contents
+// fs.writeFile('./students.txt', studentName, (err) => {
+//   if (err) {
+//     return console.log(err)
+//   }
+
+//   console.log('Student has been added!')
+// })
+
+
+
+
