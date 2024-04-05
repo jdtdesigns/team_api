@@ -1,13 +1,47 @@
-const args = process.argv
 
-// console.log('browser stuff', document, window)
-const num1 = args[2]
-const num2 = args[3]
 
-console.log('The sum is:', +num1 + +num2)
+// function printSomething(str) {
+//   console.log(str)
+// }
 
-// Get two number arguments from the user's command list (process.argv)
+// printSomething('some string')
 
-// Add those two numbers together
+// const add = (num1, num2) => num1 + num2
 
-// console.log the sum of the two numbers
+// const sum = add(5, 20)
+
+// console.log(sum)
+
+// function printStudents(...students) {
+//   console.log(students)
+// }
+
+// printStudents('Will', 'Mirsad', 'Muhsin', 'Trevor', 'Juan', 'Alice')
+
+// const fruits = ['orange', 'apple']
+
+// const copy = ['kiwi', ...fruits, 'banana']
+
+// const data = {
+//   name: 'JD',
+//   age: 44
+// }
+
+// const clone = { ...data }
+
+// console.log(clone)
+
+// const data = {
+//   name: 'JD',
+//   age: 44
+// }
+
+// const { name, age, blah } = data
+
+// console.log(data)
+
+function someFunc({ age }, str, num) {
+  console.log(num)
+}
+
+someFunc({ name: 'Bob', age: 99 }, 'another', 15)
