@@ -1,12 +1,61 @@
-const { print, add } = require('./lib/studentTools.js')
-const dayjs = require('dayjs')
+const inquirer = require('inquirer')
+const fs = require('fs')
 
-const studentName = process.argv[2]
+function generateHTML(answerObj) {
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      h1 {
+        color: #fff;
+        background: #555;
+      }
+    </style>
+  </head>
+  <body style="background-color: ${answerObj.color};">
+    <h1>${answerObj.name}</h1>
+    <p>Favorite Color: ${answerObj.color}</p>
+    <p>Address: ${answerObj.address}</p>
+  </body>
+  </html>
+  `
 
-if (studentName === 'print') {
-  print()
-} else {
-  const date = dayjs().format('MM/DD/YYYY')
+  fs.writeFile('./index.html', html, (err) => {
+    if (err) {
+      return console.log(err)
+    }
 
-  add(studentName + ' - ' + date)
+    console.log('HTML file has been generated successfully!')
+  })
 }
+
+function getAnswers() {
+  inquirer.prompt([
+    {
+      name: 'color',
+      message: 'What is your favorite color?'
+    },
+
+    {
+      name: 'name',
+      message: 'Please type your name.'
+    },
+
+    {
+      name: 'address',
+      message: 'Please type your address.'
+    }
+  ])
+    .then((answerObj) => {
+      generateHTML(answerObj)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+getAnswers()
