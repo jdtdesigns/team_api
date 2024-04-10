@@ -1,37 +1,87 @@
 
-// const literal = {
-//   name: 'JD',
-//   age: 44
+
+
+// function Person(name, age) {
+//   this.name = name
+//   this.age = age
 // }
 
-function Person(name, age, hobbies) {
-  this.name = name
-  this.age = age
-  this.hobbies = hobbies
+// Person.prototype.haveBirthday = function () {
+//   this.age++
+//   console.log('Happy Birthday', this.name)
+// }
+
+class Person {
+  constructor(name, age, hobbies) {
+    this.name = name
+    this.age = age
+    this.hobbies = hobbies
+  }
+
+  haveBirthday() {
+    this.age++
+    console.log('Happy Birthday', this.name)
+  }
+
+  printBirthday() {
+    console.log(`${this.name} is ${this.age} years old.`)
+  }
+
+  // Create a method that loops over the hobbies prop array and prints out each hobby one by one to the terminal
+  printHobbies() {
+    console.log('\nHobbies\n---------')
+
+    this.hobbies.forEach(hobby => {
+      console.log(hobby)
+    })
+  }
 }
 
-Person.sayHi = function () {
-  console.log('Hi!')
-}
-
-Person.prototype.species = 'homosapien'
-
-Person.prototype.haveBirthday = function () {
-  this.age++
-  console.log('Happy Birthday!')
-}
-
-Person.prototype.printBirthday = function () {
-  console.log(`You are ${this.age} years old.`)
-}
 
 const jd = new Person('JD', 44, ['fishing', 'pickleball'])
-const bob = new Person('Bob', 99, ['Bingo', 'Sitting'])
-const sarah = new Person('Sarah', 40, ['movies', 'pickleball'])
 
 console.log(jd)
-console.log(bob.species)
-console.log(sarah)
+
+// jd.haveBirthday()
+jd.printHobbies()
+
+
+
+
+
+
+
+
+
+
+
+// function Person(name, age, hobbies) {
+//   this.name = name
+//   this.age = age
+//   this.hobbies = hobbies
+// }
+// Person.sayHi = function () {
+//   console.log('Hi!')
+// }
+
+// Person.prototype.species = 'homosapien'
+
+// Person.prototype.haveBirthday = function () {
+//   this.age++
+//   console.log('Happy Birthday!')
+// }
+
+// Person.prototype.printBirthday = function () {
+//   console.log(`You are ${this.age} years old.`)
+// }
+
+// const jd = new Person('JD', 44, ['fishing', 'pickleball'])
+// const bob = new Person('Bob', 99, ['Bingo', 'Sitting'])
+// const sarah = new Person('Sarah', 40, ['movies', 'pickleball'])
+
+// console.log(jd)
+// console.log(bob.species)
+// console.log(sarah)
 
 // jd.haveBirthday()
 
@@ -39,4 +89,4 @@ console.log(sarah)
 
 // bob.printBirthday()
 
-Person.sayHi()
+// Person.sayHi()
