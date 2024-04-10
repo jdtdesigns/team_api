@@ -1,61 +1,42 @@
-const inquirer = require('inquirer')
-const fs = require('fs')
 
-function generateHTML(answerObj) {
-  const html = `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-      h1 {
-        color: #fff;
-        background: #555;
-      }
-    </style>
-  </head>
-  <body style="background-color: ${answerObj.color};">
-    <h1>${answerObj.name}</h1>
-    <p>Favorite Color: ${answerObj.color}</p>
-    <p>Address: ${answerObj.address}</p>
-  </body>
-  </html>
-  `
+// const literal = {
+//   name: 'JD',
+//   age: 44
+// }
 
-  fs.writeFile('./index.html', html, (err) => {
-    if (err) {
-      return console.log(err)
-    }
-
-    console.log('HTML file has been generated successfully!')
-  })
+function Person(name, age, hobbies) {
+  this.name = name
+  this.age = age
+  this.hobbies = hobbies
 }
 
-function getAnswers() {
-  inquirer.prompt([
-    {
-      name: 'color',
-      message: 'What is your favorite color?'
-    },
-
-    {
-      name: 'name',
-      message: 'Please type your name.'
-    },
-
-    {
-      name: 'address',
-      message: 'Please type your address.'
-    }
-  ])
-    .then((answerObj) => {
-      generateHTML(answerObj)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+Person.sayHi = function () {
+  console.log('Hi!')
 }
 
-getAnswers()
+Person.prototype.species = 'homosapien'
+
+Person.prototype.haveBirthday = function () {
+  this.age++
+  console.log('Happy Birthday!')
+}
+
+Person.prototype.printBirthday = function () {
+  console.log(`You are ${this.age} years old.`)
+}
+
+const jd = new Person('JD', 44, ['fishing', 'pickleball'])
+const bob = new Person('Bob', 99, ['Bingo', 'Sitting'])
+const sarah = new Person('Sarah', 40, ['movies', 'pickleball'])
+
+console.log(jd)
+console.log(bob.species)
+console.log(sarah)
+
+// jd.haveBirthday()
+
+// jd.printBirthday()
+
+// bob.printBirthday()
+
+Person.sayHi()
