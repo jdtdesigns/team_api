@@ -1,93 +1,37 @@
+const fs = require('fs/promises')
+require('colors')
 
+async function getNames() {
+  const names = await fs.readFile('./names.txt', 'utf8')
 
-const data = {
-  name: 'JD',
-  age: 44
+  return names
 }
 
-function handlesSomeTask(isCool) {
-  return new Promise((resolve, reject) => {
-    // if (isCool) {
-    //   setTimeout(() => {
-    //     resolve()
-    //   }, 5000);
-    // } else {
-    //   reject()
-    // }
-  })
+async function spinWheel() {
+  const nameData = await getNames()
+  const names = nameData.trim().split('\n')
+  const getRandom = () => {
+    const index = Math.floor(Math.random() * names.length)
+    return names[index]
+  }
+
+  let count = 30
+
+  const cycle = setInterval(() => {
+    const randomName = getRandom()
+
+    console.clear()
+
+    count--
+
+    if (!count) {
+      console.log(`${randomName} has been chosen!`.bgMagenta.white)
+      clearInterval(cycle)
+    } else {
+      console.log(randomName.bgBrightGreen.white)
+    }
+  }, 75);
+
 }
 
-const pendingProm = handlesSomeTask(false)
-
-// pendingProm
-//   .then(() => {
-//     console.log('this is the resolve function')
-//   })
-//   .catch(() => {
-//     console.log('Error catch callback. This is reject.')
-//   })
-
-console.log(Date)
-
-// const methods = {
-//   one: function() {
-
-//   },
-
-//   two: function() {
-
-//   }
-// }
-
-// methods.one()
-
-// class Prom {
-//   constructor(callback) {
-//     function resolve() {
-
-//     }
-
-//     function reject() {
-
-//     }
-
-//     callback(resolve, reject)
-//   }
-
-//   then(cb) {
-//     // Wait until some async code runs and completes before calling the callback
-//     setTimeout(() => {
-//       cb()
-//     }, 3000)
-
-//     return this
-//   }
-
-//   catch(cb) {
-
-//   }
-// }
-
-// const prom = new Prom((resolve, reject) => {
-
-// })
-
-// prom.then(() => {
-//   console.log('callback called')
-// })
-
-// const date = new Date()
-
-// function someFunc(callback) {
-//   callback
-// }
-
-// someFunc(() => {})
-
-// class Animal {
-//   constructor(name, friend) {
-
-//   }
-// }
-
-// const bear = new Animal('yogi', 'booboo')
+spinWheel()
