@@ -1,97 +1,74 @@
+const express = require('express')
 
+const app = express()
+const PORT = 3333
 
-const tasks = [
+const data = [
   {
-    text: 'task one',
-    priority: true
+    id: 1,
+    name: 'JD',
+    age: 44
   },
   {
-    text: 'task two',
-    priority: true
+    id: 2,
+    name: 'Bob',
+    age: 99
   },
   {
-    text: 'task three',
-    priority: false
+    id: 3,
+    name: 'Sarah',
+    age: 40
   }
 ]
 
-class TaskListItem {
-  constructor(text, priority) {
-    this.text = text
-    this.priority = priority
-  }
-
-  render() {
-    return `<li>${this.text}</li>`
-  }
-}
-
-const taskItems = tasks.map((taskObj) => {
-  return new TaskListItem(taskObj.text, taskObj.priority)
+// Create a GET route that listens for the user to visit the root address/domain
+app.get('/', (requestObj, responseObj) => {
+  responseObj.send('Hey from the server!')
 })
 
-let taskHTML = ''
+app.get('/api/:user_id', (requestObj, responseObj) => {
+  const id = requestObj.params.user_id
 
-taskItems.forEach(task => {
-  taskHTML += task.render()
+  // Pull the user's object from the data array by the id property
+  const user = data.find((userObj) => {
+    if (userObj.id == id) return true
+  })
+
+  if (user) {
+    return responseObj.json(user)
+  }
+
+  return responseObj.json({
+    message: 'User not found matching that id'
+  })
 })
 
-console.log(taskHTML)
+app.get('/about', (requestObj, responseObj) => {
+  responseObj.send('<h1>About Header</h1>')
+})
 
+app.get('/data', (requestObj, responseObj) => {
+  const queryParams = requestObj.query
 
+  // Create an empty object
+  const obj = {}
 
-// const axios = require('axios')
-// const inquirer = require('inquirer')
+  // If they request the name (name: 'true'), then we add the property name to the object
+  if (queryParams.name === 'true') {
+    obj.name = 'JD'
+  }
 
-// const baseURL = 'https://swapi.dev/api'
+  // If they request the age (age: 'true'), then we add the property age to the object
+  if (queryParams.age === 'true') {
+    obj.age = 44
+  }
 
-// function outputSearchResults(data) {
-//   console.log('\nResults:\n---------')
+  // Send the completed object back in the response
+  responseObj.json(obj)
+})
 
-//   data.results.forEach(result => {
-//     console.log('Name:', result.name)
-//   })
-// }
-
-// async function makeRequest(data) {
-//   const url = `${baseURL}/${data.dataset.toLowerCase()}?search=${data.search}`
-
-//   const res = await axios.get(url)
-//   return res.data
-// }
-
-// async function getSearch(datasetObject) {
-//   const searchObject = await inquirer.prompt({
-//     name: 'search',
-//     message: 'Please type a search word for your chosen dataset.'
-//   })
-
-//   return {
-//     dataset: datasetObject.dataset,
-//     search: searchObject.search
-//   }
-// }
-
-// async function getDataset() {
-//   // Get the dataset choice
-//   const answerObj = await inquirer.prompt({
-//     name: 'dataset',
-//     type: 'list',
-//     message: 'Please select a dataset from the list.',
-//     choices: ['Films', 'People', 'Planets', 'Species', 'Starships', 'Vehicles']
-//   })
-
-//   return answerObj
-// }
-
-// getDataset()
-//   .then(getSearch)
-//   .then(makeRequest)
-//   .then(outputSearchResults)
-
-
-
-// // axios.get(baseURL + '/planets')
-// //   .then((res) => {
-// //     console.log(res.data)
-// //   })
+// Start the server - Tell the server to start listening for routes to be visited
+// 
+app.listen(PORT, () => {
+  console.log('Server running on port', PORT)
+})
