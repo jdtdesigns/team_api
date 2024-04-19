@@ -10,12 +10,16 @@ const client = new Client({
   database: 'student_course_db'
 })
 
+// Open the middleware channel to allow JSON to be passed to our routes
 app.use(express.json())
 
 // Get all courses
 app.get('/api/courses', async (request, response) => {
   const detailed = request.query.detailed
 
+  // Check if a query parameter of detailed=true was sent through the request
+  // locahost:3333/api/courses?detailed=true
+  // If it was sent, make a detailed JOIN query to grab all course and student data then sent it back
   if (detailed === 'true') {
     const { rows } = await client.query(`
     SELECT 
@@ -32,6 +36,7 @@ app.get('/api/courses', async (request, response) => {
     return response.json(rows)
   }
 
+  // If they don't want detailed, send the basic course data back
   const { rows } = await client.query('SELECT * FROM courses')
 
   response.json(rows)
