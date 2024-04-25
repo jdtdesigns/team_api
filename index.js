@@ -2,7 +2,7 @@ const { Sequelize, DataTypes, Model } = require('sequelize');
 const { hash, compare } = require('bcrypt')
 
 const client = new Sequelize(
-  'sequelize_practice_db',
+  'teams_db',
   'postgres',
   'pass',
   {
@@ -11,22 +11,37 @@ const client = new Sequelize(
     // logging: false
   });
 
-class Note extends Model { }
+class Team extends Model { }
 
-Note.init(
+Team.init(
   {
-    text: {
-      type: DataTypes.STRING, // VARCHAR(255)
+    team_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    name: {
+      type: DataTypes.STRING,
       allowNull: false
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    coach: {
+      type: DataTypes.STRING
     }
   },
   {
-    sequelize: client
+    sequelize: client,
+    modelName: 'team',
+    timestamps: false
   }
 )
 
 
-class User extends Model {
+class Player extends Model {
   async validatePass(formPassword) {
     const is_valid = await compare(formPassword, '')
 
@@ -34,10 +49,18 @@ class User extends Model {
   }
 }
 
-User.init(
+Player.init(
   {
+    player_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true
+    },
     email: {
       type: DataTypes.STRING,
+      // Does not allow a player with the same email address to create an account
+      unique: true,
       validate: {
         isEmail: true
       },
@@ -49,158 +72,71 @@ User.init(
         len: 6
       },
       allowNull: false
+    },
+    first_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    last_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    age: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   },
   {
     sequelize: client,
+    modelName: 'player',
     hooks: {
       async beforeCreate(user) {
         user.password = await hash(user.password, 10)
       }
-    }
-    // timestamps: false
+    },
+    // Do not include createdAt and updatedAt fields
+    timestamps: false
   }
 )
 
-// One To Many Relationship - Setting up the foreign key association
-User.hasMany(Note) // UserId on each note
-Note.belongsTo(User) // UserId on each note
+Team.belongsToMany(Player, { through: 'team_player' })
+Player.belongsToMany(Team, { through: 'team_player' })
+
 
 client.sync({ force: false })
   .then(async () => {
-    // Create a user
-    try {
-      const user = await User.findByPk(4)
-      const formPassword = 'password123'
-
-      const valid = await user.validatePass(formPassword)
-
-      if (valid) {
-        console.log('Password is correct. Logging you in...')
-      } else {
-        console.log('Your password is incorrect. Please try again.')
-      }
-
-      // const user = await User.create({
-      //   email: 'jd@test.com',
-      //   password: 'password123'
-      // })
-
-
-      // console.log(user)
-
-      // await User.destroy({
-      //   where: {}
-      // })
-
-      // await Note.destroy({
-      //   where: {}
-      // })
-
-      // console.log('users and notes gone')
-      // const note = await Note.findByPk(3, {
-      //   include: User
-      // })
-
-      // console.log(note.User.email)
-
-
-
-      // const users = await User.findAll({
-      //   include: Note
-      // })
-
-      // console.log(users[0])
-
-      // const user = await User.findOne({
-      //   where: {
-      //     email: 'bob@test.com'
-      //   },
-      //   include: {
-      //     model: Note,
-      //     attributes: ['text']
-      //   }
-      // })
-
-
-      // const note = await Note.create({
-      //   text: 'Random Note',
-      //   UserId: user.id
-      // })
-
-      // console.log(note)
-      // const jd = await User.findByPk(1)
-      // // const jd = await User.findByPk(1)
-
-      // const note = await jd.createNote({
-      //   text: 'Note two for jd'
-      // })
-      // const note = await jd.createNote({
-      //   text: 'Note one for jd'
-      // })
-      // const bob = await User.create({
-      //   email: 'bob@test.com',
-      //   password: 'password123'
-      // })
-
-    } catch (err) {
-      console.log(err)
-    }
-
-
-    // Create a new row in the table
-    // const note = await Note.create({
-    //   text: 'Text for note five'
+    // const braves = await Team.findByPk(1, {
+    //   include: Player
     // })
 
-    // Find all notes
-    // const notes = await Note.findAll({
-    //   attributes: ['text'],
-    //   where: {
-    //     id: 1
-    //   }
+    // console.log(braves.get({ plain: true }))
+    const julie = await Player.findByPk(2, {
+      include: Team
+    })
+
+    console.log(julie.get({ plain: true }))
+
+
+    // julie.addTeam(braves)
+    // // await braves.addPlayer(john)
+
+    // console.log('Player has been added!')
+
+    // const braves = await Team.create({
+    //   name: 'Braves',
+    //   type: 'baseball',
+    //   coach: 'Brian Snitker'
     // })
 
-    // Find One
-    // const note = await Note.findOne({
-    //   where: {
-    //     id: 10
-    //   }
+    // console.log(braves)
+
+    // const julie = await Player.create({
+    //   email: 'julie@test.com',
+    //   password: 'password123',
+    //   first_name: 'Julie',
+    //   last_name: 'Wilson',
+    //   age: 15
     // })
 
-    // Find by Primary Key(id)
-    // const note = await Note.findByPk(3)
-
-    // console.log(note)
-    // Note.findAll()
-    //   .then(notes => {
-    //     console.log(notes[1].text)
-    //   })
-
-
-    // `
-    // DELETE FROM Notes WHERE id = 1
-    // `
-    // Delete a row from Notes
-    // await Note.destroy({
-    //   where: {
-    //     id: 5
-    //   }
-    // })
-
-    // console.log('Note deleted successfully!')
-
-    // const results = await Note.update(
-    //   {
-    //     text: 'Some even newer text for note 1'
-    //   },
-    //   {
-    //     where: {
-    //       id: 1
-    //     },
-    //     returning: true
-    //   }
-    // )
-
-    // console.log(results[1][0])
+    // console.log(julie)
   })
