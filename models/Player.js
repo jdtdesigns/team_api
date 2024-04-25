@@ -8,6 +8,14 @@ class Player extends Model {
 
     return is_valid
   }
+
+  toJSON() {
+    const player = Object.assign({}, this.get())
+
+    delete player.password
+
+    return player
+  }
 }
 
 Player.init(

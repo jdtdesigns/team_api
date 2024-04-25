@@ -13,11 +13,23 @@ Team.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: false,
+          msg: 'You must provide a name for the team.'
+        }
+      }
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: false,
+          msg: 'You must provide a type for the team.'
+        }
+      }
     },
     coach: {
       type: DataTypes.STRING
