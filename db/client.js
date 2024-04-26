@@ -1,9 +1,7 @@
 const { Sequelize } = require('sequelize');
 const is_prod = process.env.NODE_ENV // 'production'
 
-const client = is_prod ? new Sequelize(process.env.DB_URL, {
-  ssl: { rejectUnauthorized: false }
-}) :
+const client = is_prod ? new Sequelize(process.env.DB_URL) :
   new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USERNAME,
