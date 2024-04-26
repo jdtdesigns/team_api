@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const PORT = process.env.PORT || 3333
 
+require('dotenv').config()
 const client = require('./db/client')
 
 // Import router/routes

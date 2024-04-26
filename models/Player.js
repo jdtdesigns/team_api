@@ -29,16 +29,29 @@ Player.init(
     email: {
       type: DataTypes.STRING,
       // Does not allow a player with the same email address to create an account
-      unique: true,
+      unique: {
+        args: true,
+        msg: 'That email address is already in use.'
+      },
       validate: {
-        isEmail: true
+        notNull: {
+          args: false,
+          msg: 'You must provide an email address'
+        },
+        isEmail: {
+          args: true,
+          msg: 'You must provide a valid email string'
+        }
       },
       allowNull: false
     },
     password: {
       type: DataTypes.STRING,
       validate: {
-        len: 6
+        len: {
+          args: 6,
+          msg: 'Your password must be at least 6 characters in length'
+        }
       },
       allowNull: false
     },
